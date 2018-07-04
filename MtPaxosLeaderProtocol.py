@@ -49,3 +49,32 @@ class MtPaxosLeaderProtocol:
                     # send accept message
                     msg = MtMessage(MtMessage.MSG_ACCEPT)
                     msg.copyAsReply(message)
+                    msg.value = self.value
+                    msg.leaderID = msg.to # What's this for?
+                    for s in self.leader.getAcceptors():
+                        msg.to = s
+                        self.leader.sendMessage(msg)
+                    self.leader.notifyLeader(self, message)
+                return True
+            elif message.command == MtMessage.MSG_ACCEPTOR_REJECT:
+                self.rejectcount += 1
+                if self.rejectcount >= self.leader.getQuorumSize():
+                    self.state = MtPaxosLeaderProtocol.STATE_REJECTED
+                    self.leader.notifyLeader(self, message)
+                return True
+        if self.state == MtPaxosLeaderProtocol.STATE_AGREED:
+            if message.command == MtMessage.MSG_ACCEPTOR_ACCEPT:
+                self.acceptcount += 1
+                print('leader: {} instance:{} acceptcount:{} value: {} '.format(self.leader.port, message.instanceID, self.acceptcount, message.value))
+                if self.acceptcount >= self.leader.getQuorumSize():
+                    self.state = MtPaxosLeaderProtocol.STATE_ACCEPTED
+                    self.leader.notifyLeader(self, message)
+            if message.command == MtMessage.MSG_ACCEPTOR_UNACCEPT:
+                self.unacceptcount += 1
+                if self.unacceptcount >= self.leader.getQuorumSize():
+                    self.state = MtPaxosLeaderProtocol.STATE_UNACCEPTED
+                    self.leader.notifyLeader(self, message)
+        pass
+        
+
+
