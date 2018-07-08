@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     start=time.time()
-    for i in range(30)
+    for i in range(30):
         m = MtMessage(MtMessage.MSG_EXT_PROPOSE)
         m.value = 0 + i
         m.to = SVR_PORT_TWO # notify leader

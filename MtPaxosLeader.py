@@ -147,7 +147,7 @@ class MtPaxosLeader:
             self.instances[message.instanceID].getProtocol(message.proposalID).doTransition(message)
         if message.command == MtMessage.MSG_ACCEPTOR_ACCEPT:
             if message.instanceID not in self.instances:
-                self.instances(message.instanceID) = MtInstanceRecord()
+                self.instances[message.instanceID] = MtInstanceRecord()
             record = self.instances[message.instanceID] 
             if message.proposalID not in record.cleanProtocols:
                 protocol = MtPaxosLeaderProtocol(self)
@@ -179,7 +179,7 @@ class MtPaxosLeader:
         protocol.propose(value, id, instanceID)
         record.addProtocol(protocol)
     
-    def notifyLeader(self, protocol, message)
+    def notifyLeader(self, protocol, message):
         if protocol.state == MtPaxosLeaderProtocol.STATE_ACCEPTED:
             print(u'leader:{} accepted instance:{} value:{} sender:{}'.format(self.port, message.instanceID, message.value, message.source) )
             self.instances[message.instanceID].accepted = True

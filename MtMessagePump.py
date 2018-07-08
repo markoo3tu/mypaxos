@@ -31,7 +31,7 @@ class MtMessageBump(threading.Thread):
             self.socket.bind(('localhost', port))
             self.socket.settimeout(timeout)
             self.queue = Queue()
-            self.helper = MtMessageBump.MtMpHelper(this)
+            self.helper = MtMessageBump.MtMpHelper(self)
 
         def run(self):
             self.helper.start()

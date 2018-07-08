@@ -40,8 +40,17 @@ class MtPaxosAcceptor:
             protocol.recvProposal(message)
             self.instances[message.instanceID].addProtocol(protocol)
         else:
-            self.instances[message.instanceID].getProtool(message.proposalID)
+            self.instances[message.instanceID].getProtocol(message.proposalID)
     
     def notifyClient(self, protocol, message):
-        if protocol.state == MtPaxosAcceptorProtocol.STATE_PROPOSAL_ACCEPTED
+        if protocol.state == MtPaxosAcceptorProtocol.STATE_PROPOSAL_ACCEPTED:
+            self.instances[protocol.instanceID].value = message.value
+            print(u'acceptor: %s accepted instance: %s %s, value:%s'.format(self.port, protocol.instanceID, message.instanceID, message.value))
+
+    def getHighestAgreedProposal(self, instance):
+        return self.instances[instance].highestID
+
+    def getInstanceValue(self, instance):
+        return self.instances[instance].value
+
         
