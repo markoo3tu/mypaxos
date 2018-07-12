@@ -40,7 +40,7 @@ class MtPaxosAcceptor:
             protocol.recvProposal(message)
             self.instances[message.instanceID].addProtocol(protocol)
         else:
-            self.instances[message.instanceID].getProtocol(message.proposalID)
+            self.instances[message.instanceID].getProtocol(message.proposalID).doTransition(message)
     
     def notifyClient(self, protocol, message):
         if protocol.state == MtPaxosAcceptorProtocol.STATE_PROPOSAL_ACCEPTED:

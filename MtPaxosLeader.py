@@ -149,7 +149,7 @@ class MtPaxosLeader:
             if message.instanceID not in self.instances:
                 self.instances[message.instanceID] = MtInstanceRecord()
             record = self.instances[message.instanceID] 
-            if message.proposalID not in record.cleanProtocols:
+            if message.proposalID not in record.protocols:
                 protocol = MtPaxosLeaderProtocol(self)
                 protocol.state = MtPaxosLeaderProtocol.STATE_AGREED
                 protocol.proposalID = message.proposalID
@@ -183,7 +183,7 @@ class MtPaxosLeader:
         if protocol.state == MtPaxosLeaderProtocol.STATE_ACCEPTED:
             print(u'leader:{} accepted instance:{} value:{} sender:{}'.format(self.port, message.instanceID, message.value, message.source) )
             self.instances[message.instanceID].accepted = True
-            self.instnaces[message.instanceID].value = message.value
+            self.instances[message.instanceID].value = message.value
             self.highestInstance = max(message.instanceID, self.highestInstance)
             return
         if protocol.state == MtPaxosLeaderProtocol.STATE_REJECTED:
